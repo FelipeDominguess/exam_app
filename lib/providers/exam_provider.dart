@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:exam_app/core/services/exam_api.dart';
+import 'package:exam_app/services/exam_api.dart';
 
 class ExamProvider extends ChangeNotifier {
   final ExamApi _examApi;
@@ -23,11 +23,15 @@ class ExamProvider extends ChangeNotifier {
   }
 
 void reorderNumbers(int oldIndex, int newIndex) {
+  if (newIndex > oldIndex) {
+    newIndex -= 1;
+  }
+
   final number = numbers.removeAt(oldIndex);
   numbers.insert(newIndex, number);
-  
+
   isOrdered = null; // Reseta a verificação de ordenação
-  notifyListeners(); // Notifica a UI para atualizar
+  notifyListeners();
 }
 
   void checkOrder() {
