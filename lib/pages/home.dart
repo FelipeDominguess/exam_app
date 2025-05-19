@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     _controller.dispose();
     super.dispose();
   }
-
+//Feedback
   void _showSnackBar(BuildContext context, String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
+//Validar input
   void _validateAndGenerate(BuildContext context, String value) {
     final provider = Provider.of<ExamProvider>(context, listen: false);
 
@@ -84,7 +84,7 @@ Widget build(BuildContext context) {
                       ),
                       const SizedBox(height: 12),
                       FilledButton.icon(
-                        key: const Key('generateButton'), // Added key here
+                        key: const Key('generateButton'), 
                         onPressed: () {
                           FocusScope.of(context).unfocus();
                           _validateAndGenerate(context, _controller.text);
@@ -144,7 +144,7 @@ Widget build(BuildContext context) {
                                   ),
                                   const SizedBox(width: 8),
                                   FilledButton.icon(
-                                    key: const Key('generateButton'), // Added key here
+                                    key: const Key('generateButton'), 
                                     onPressed: () {
                                       FocusScope.of(context).unfocus();
                                       _validateAndGenerate(

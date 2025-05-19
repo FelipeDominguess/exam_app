@@ -8,7 +8,7 @@ class ExamProvider extends ChangeNotifier {
   bool? isOrdered;
 
   ExamProvider(this._examApi);
-
+//Pega números aleatorio e nao repetidos
   void fetchRandomNumbers(int quantity) {
     try {
       if (quantity <= 0) throw ArgumentError('Quantity must be positive');
@@ -22,6 +22,7 @@ class ExamProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+//Funcao para mover o old para o newindex e limpa a ordem
   void reorderNumbers(int oldIndex, int newIndex) {
     if (newIndex > oldIndex) {
       newIndex -= 1;
@@ -34,11 +35,13 @@ class ExamProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+//Verifica a ordem
   void checkOrder() {
     isOrdered = _examApi.checkOrder(numbers);
     notifyListeners();
   }
 
+//Reinicia
   void reset() {
     numbers = [];
     errorMessage = null;
