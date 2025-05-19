@@ -74,7 +74,7 @@ Widget build(BuildContext context) {
                         style: TextStyle(fontSize: 18),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 180),
+                      const SizedBox(height: 250),
                       InputField(
                         controller: _controller,
                         onSubmitted: (value) {
