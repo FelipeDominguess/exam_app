@@ -5,14 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
      static int failed = 0;
      static late DateTime startTime;
 
-     /// Initializes the test utilities, resetting counters and start time.
      static void init() {
        passed = 0;
        failed = 0;
        startTime = DateTime.now();
      }
 
-     /// Sets up the tearDownAll callback to print test results.
      static void setupTearDownAll(String groupName) {
        tearDownAll(() {
          final duration = DateTime.now().difference(startTime);
@@ -36,7 +34,6 @@ import 'package:flutter_test/flutter_test.dart';
        });
      }
 
-     /// Runs a test case, updating passed/failed counters.
      static void runTest(String description, Future<void> Function() testBody) {
        test(description, () async {
          try {
@@ -48,4 +45,16 @@ import 'package:flutter_test/flutter_test.dart';
          }
        });
      }
+
+     static void runWidgetTest(String description, Future<void> Function(WidgetTester) testBody) {
+    testWidgets(description, (WidgetTester tester) async {
+      try {
+        await testBody(tester);
+        passed++;
+      } catch (_) {
+        failed++;
+        rethrow;
+      }
+    });
+  }
    }

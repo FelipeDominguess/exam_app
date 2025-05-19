@@ -22,17 +22,17 @@ class ExamProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-void reorderNumbers(int oldIndex, int newIndex) {
-  if (newIndex > oldIndex) {
-    newIndex -= 1;
+  void reorderNumbers(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
+    final number = numbers.removeAt(oldIndex);
+    numbers.insert(newIndex, number);
+
+    isOrdered = null;
+    notifyListeners();
   }
-
-  final number = numbers.removeAt(oldIndex);
-  numbers.insert(newIndex, number);
-
-  isOrdered = null; // Reseta a verificação de ordenação
-  notifyListeners();
-}
 
   void checkOrder() {
     isOrdered = _examApi.checkOrder(numbers);

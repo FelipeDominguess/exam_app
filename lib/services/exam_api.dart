@@ -11,9 +11,8 @@ abstract class ExamApi {
 class ExamApiImpl implements ExamApi {
   @override
   List<int> getRandomNumbers(int quantity) {
-    //Não deve retornar número repetido
+    //Não deve retornar número negativo
     if (quantity < 0) throw ArgumentError('Quantity must be non-negative');
-    if (quantity > 100) throw ArgumentError('Quantity cannot exceed 100');
 
     final random = Random();
     final numbers = <int>{};
