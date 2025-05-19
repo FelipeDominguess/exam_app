@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+Widget build(BuildContext context) {
     final provider = Provider.of<ExamProvider>(context);
 
     return Scaffold(
@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 12),
                       FilledButton.icon(
+                        key: const Key('generateButton'), // Added key here
                         onPressed: () {
                           FocusScope.of(context).unfocus();
                           _validateAndGenerate(context, _controller.text);
@@ -143,6 +144,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   const SizedBox(width: 8),
                                   FilledButton.icon(
+                                    key: const Key('generateButton'), // Added key here
                                     onPressed: () {
                                       FocusScope.of(context).unfocus();
                                       _validateAndGenerate(

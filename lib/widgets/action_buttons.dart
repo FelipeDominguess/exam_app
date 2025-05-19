@@ -20,7 +20,7 @@ class ActionButtons extends StatelessWidget {
           child: FilledButton(
             key: const Key('checkOrderButton'),
             onPressed: onValidate,
-            child: const Text('Check Order'),
+            child: const Text('Verificar Ordem'),
           ),
         ),
         const SizedBox(width: 8),
@@ -28,7 +28,7 @@ class ActionButtons extends StatelessWidget {
           child: FilledButton(
             key: const Key('resetButton'),
             onPressed: onReset,
-            child: const Text('Reset'),
+            child: const Text('Reiniciar'),
           ),
         ),
       ],

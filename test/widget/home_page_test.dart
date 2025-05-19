@@ -70,9 +70,40 @@ void main() {
         (tester) async {
       examProvider.fetchRandomNumbers(3);
       await tester.pumpWidget(createWidgetUnderTest());
-      await tester.tap(find.text('Reset'));
+      await tester
+          .tap(find.byKey(const Key('resetButton'))); // Updated to use key
       await tester.pump();
       expect(find.textContaining(RegExp(r'\d')), findsNothing);
+    });
+
+    TestUtils.runWidgetTest('should show error when input is empty',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.tap(find.byKey(
+          const Key('generateButton'))); // pressiona o botão sem digitar nada
+      await tester.pump(); // atualiza o frame
+
+      expect(find.text('Insira um número por favor'), findsOneWidget);
+    });
+
+    TestUtils.runWidgetTest('should show error for zero or negative input',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.enterText(find.byType(TextField), '-1');
+      await tester.tap(find.byKey(const Key('generateButton')));
+      await tester.pump();
+
+      expect(find.text('Insira um número maior que 0'), findsOneWidget);
+    });
+
+    TestUtils.runWidgetTest('should show error for non-integer input',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.enterText(find.byType(TextField), 'abc');
+      await tester.tap(find.byKey(const Key('generateButton')));
+      await tester.pump();
+
+      expect(find.text('Insira um número inteiro válido'), findsOneWidget);
     });
   });
 }
