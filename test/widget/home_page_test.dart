@@ -70,40 +70,120 @@ void main() {
         (tester) async {
       examProvider.fetchRandomNumbers(3);
       await tester.pumpWidget(createWidgetUnderTest());
-      await tester
-          .tap(find.byKey(const Key('resetButton'))); // Updated to use key
+      await tester.tap(find.byKey(const Key('resetButton')));
       await tester.pump();
       expect(find.textContaining(RegExp(r'\d')), findsNothing);
     });
 
+    // Testa se um erro é exibido quando o input está vazio
     TestUtils.runWidgetTest('should show error when input is empty',
         (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
-      await tester.tap(find.byKey(
-          const Key('generateButton'))); // pressiona o botão sem digitar nada
-      await tester.pump(); // atualiza o frame
-
+      await tester.tap(find.byKey(const Key('generateButton')));
+      await tester.pump();
       expect(find.text('Insira um número por favor'), findsOneWidget);
     });
 
+    // Testa se um erro é exibido para valores zero ou negativos
     TestUtils.runWidgetTest('should show error for zero or negative input',
         (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.enterText(find.byType(TextField), '-1');
       await tester.tap(find.byKey(const Key('generateButton')));
       await tester.pump();
-
       expect(find.text('Insira um número maior que 0'), findsOneWidget);
     });
 
+    // Testa se um erro é exibido para entrada não numérica
     TestUtils.runWidgetTest('should show error for non-integer input',
         (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.enterText(find.byType(TextField), 'abc');
       await tester.tap(find.byKey(const Key('generateButton')));
       await tester.pump();
-
       expect(find.text('Insira um número inteiro válido'), findsOneWidget);
+    });
+
+    // Testa se o campo TextField é limpo após pressionar o botão Reset
+    TestUtils.runWidgetTest(
+        'should clear TextField when Reset button is pressed', (tester) async {
+      examProvider.fetchRandomNumbers(3);
+      await tester.pumpWidget(createWidgetUnderTest());
+
+      await tester.enterText(find.byType(TextField), '5');
+      await tester.pump();
+
+      await tester.tap(find.byKey(const Key('resetButton')));
+      await tester.pumpAndSettle();
+
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      expect(textField.controller!.text, isEmpty);
+    });
+
+    // Testa se números únicos são gerados com a quantidade correta
+    TestUtils.runWidgetTest(
+        'should generate unique numbers with correct quantity', (tester) async {
+      examProvider.fetchRandomNumbers(5);
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pump();
+
+      expect(examProvider.numbers.length, 5);
+      expect(examProvider.numbers.toSet().length, 5);
+    });
+
+    // Testa o fluxo completo: gerar, reorganizar e validar
+    TestUtils.runWidgetTest(
+        'should complete full flow: generate, reorder, validate',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.enterText(find.byType(TextField), '3');
+      await tester.tap(find.byKey(const Key('generateButton')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ReorderableListView), findsOneWidget);
+      expect(examProvider.numbers.length, 3);
+
+      final originalNumbers = List<int>.from(examProvider.numbers);
+      examProvider.numbers.sort();
+      examProvider.notifyListeners();
+      await tester.pump();
+
+      await tester.tap(find.byKey(const Key('checkOrderButton')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Ordem correta!'), findsOneWidget);
+    });
+
+    // Testa se feedback de erro é exibido quando a ordem está incorreta
+    TestUtils.runWidgetTest('should show error when order is incorrect',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest());
+
+      examProvider.numbers = [3, 1, 2];
+      examProvider.notifyListeners();
+      await tester.pump();
+
+      await tester.tap(find.byKey(const Key('checkOrderButton')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('A ordem está incorreta.'), findsOneWidget);
+    });
+
+    // Testa novamente se feedback de erro é exibido com lista invertida
+    TestUtils.runWidgetTest('should show error when order is incorrect',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.enterText(find.byType(TextField), '3');
+      await tester.tap(find.byKey(const Key('generateButton')));
+      await tester.pumpAndSettle();
+
+      examProvider.numbers = List.from(examProvider.numbers)
+        ..sort((a, b) => b.compareTo(a)); // Inverte a ordem
+      examProvider.notifyListeners();
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('checkOrderButton')));
+      await tester.pumpAndSettle();
+      expect(find.text('A ordem está incorreta.'), findsOneWidget);
     });
   });
 }
