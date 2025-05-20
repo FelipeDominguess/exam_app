@@ -41,9 +41,9 @@ void main() {
       examProvider.fetchRandomNumbers(3);
       await tester.pumpWidget(createWidgetUnderTest());
       expect(find.byType(ReorderableListView), findsOneWidget);
-      expect(find.textContaining(examProvider.numbers[0].toString()),
-          findsOneWidget);
+      expect(find.text(examProvider.numbers[0].toString()), findsOneWidget);
     });
+
 
     // Testa se a HomePage permite reorganizar os itens da lista
     TestUtils.runWidgetTest('should allow reordering of list items',
